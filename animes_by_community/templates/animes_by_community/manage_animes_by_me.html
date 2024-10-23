@@ -1,0 +1,82 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Mis aportes{% endblock %}
+{% load static %}
+{% block bootstrap_css %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+            
+        {% for message in messages %}
+            <script>
+                Swal.fire({
+                    icon: '{{message.tags}}',
+                    title: '{{message}}',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            </script>
+        {% endfor %}
+
+    {% endif %}
+{% if animes %}
+    <div class="container mt-4">
+        <h2 class="title-container">Mis Aportes</h2>
+        <div class="row">
+            {% for anime in animes %}
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="image-container">
+                            <img src="{{ anime.imagen_url }}" alt="imagen de portada del anime">
+                        </div>
+                        <h5 class="card-title">{{ anime.titulo_ingles }}</h5>
+                        <p class="card-text">Fecha de aporte: {{ anime.fecha_creacion|date:"d F Y" }} </p>
+                        <p class="card-text">{{ anime.short_synopsis }}</p>
+                        <a href="{% url 'anime_detail' anime.id_anime %}" class="btn btn-primary">Ver detalles</a>
+                        <a href="#" class="btn btn-secondary">Modificar</a>
+                        <form action="" method="POST" class="d-inline" id="delete-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="anime_id" value="{{ anime.id_anime }}">
+                            <button type="button" class="btn btn-danger" id="delete-button">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <section class="welcome-paragraph">
+        <a href="{% url 'animes_by_community:create_anime' %}"><button class="add-to-list">Aportar con un anime</button></a>
+    </section>
+{% endif %}
+
+<script>
+    document.getElementById('delete-button').addEventListener('click', function(event) {
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "¿Quieres eliminar este anime?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar!',
+                cancelButtonText: 'No, cancelar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form').submit();
+                
+                }
+            });
+        });
+</script>
+
+{% endblock %}
+
+{% block hide_message_js %}
+{% load static %}
+<script src="{% static 'js/hide_message.js' %}"></script>
+{% endblock %}
+    

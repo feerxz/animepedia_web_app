@@ -1,0 +1,64 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Mi cuenta{% endblock %}
+
+{% block content %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <script>
+                    Swal.fire({
+                        icon: '{{message.tags}}',
+                        title: '{{message}}',
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
+                </script>
+            {% endfor %}
+        {% endif %}
+<main>
+    <section class="option-account">
+        <a href="{% url 'profile' %}">
+            <div class="parent-div">
+                <div>
+                    <h2>Perfil</h2>
+                    <p>Tu información personal</p>
+                </div>
+                <div class="edit-icon">
+                    <img src="/static/images/editar_perfil.jpg" alt="icono de editar perfil" width="200px">
+                </div>
+            </div>
+        </a>
+    </section>
+    <section class="option-account">
+        <a href="{% url 'manage_favorites_lists' %}">
+            <div class="parent-div">
+                <div>
+                    <h2>Mis listas</h2>
+                    <p>Administra tus listas de favoritos</p>
+                </div>
+                <div class="edit-icon">
+                    <img src="/static/images/administrar_listas.jpg" alt="icono de editar perfil" width="200px">
+                </div>
+            </div>
+        </a>
+    </section>
+    <section class="option-account">
+        <a href="{% url 'animes_by_community:manage_animes_by_me' %}">
+            <div class="parent-div">
+                <div>
+                    <h2>Mis aportes</h2>
+                    <p>Administra los animes que has aportado</p>
+                </div>
+                <div class="edit-icon">
+                    <img src="/static/images/aporte_anime.png" alt="icono de editar perfil" width="200px">
+                </div>
+            </div>
+        </a>
+    </section>
+</main>
+
+{% endblock %}
+{% block hide_message_js %}
+{% load static %}
+<script src="{% static 'js/hide_message.js' %}"></script>
+{% endblock %}

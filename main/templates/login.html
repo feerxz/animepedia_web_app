@@ -1,0 +1,45 @@
+
+{% extends 'layouts/base.html' %}
+{% block title %}Animepedia/Login{% endblock %}
+
+{% block extra_css %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+  <div class="login-box">
+    <h1 class="login">Iniciar Sesión</h1>
+    <form method="POST">
+      {% csrf_token %}
+          {% if messages %}
+              {% for message in messages %}
+                  <script>
+                      Swal.fire({
+                          icon: '{{message.tags}}',
+                          title: '{{message}}',
+                          showConfirmButton: false,
+                          timer: 3000
+                      })
+                  </script>
+              {% endfor %}
+          {% endif %}
+        
+      <div class="user-box">
+        <input class="input-field" type="text" name="username" required id="username"  >
+        <label for="username">Nombre de usuario</label>
+      </div>
+      <div class="user-box">
+        <input class="input-field" type="password" name="password" required id="password" >
+        <label for="password">Contraseña</label>
+      </div>
+      <button>
+             Iniciar Sesión
+         <span></span>
+      </button>
+    </form>
+  </div>
+
+{% endblock %}

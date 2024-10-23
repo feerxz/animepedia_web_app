@@ -1,0 +1,209 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Crear lista de favoritos {% endblock %}
+
+
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                Swal.fire({
+                    icon: '{{message.tags}}',
+                    title: '{{message}}',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            </script>
+        {% endfor %}
+    {% endif %}
+
+    <h1 class="title-container">Crear lista de favoritos</h1>
+    <section class="create-fav-list">
+        <form method="POST" action="" class="create-list-form">
+            {% csrf_token %}
+            <header>
+                <h2>Mi lista</h2>
+            </header>
+            
+            <section class="list-info">
+                <div class="info-container">
+                    <label for="name">Nombre de la lista</label>
+                    <input class="data-input" type="text" name="name" id="name" placeholder="Nombre de la lista" maxlength="40" required>
+                </div>
+
+                <div class="info-container">
+                    <label for="description">Descripción (opcional)</label>
+                    <textarea class="data-input" name="description" id="description" placeholder="Descripción de la lista"
+                    maxlength="500"></textarea>
+                </div>
+
+                <div class="info-container">
+                    <label for="category-gender">Categoría-género</label>
+                    <input class="data-input" type="text" name="category-gender" id="category-gender" placeholder="Escribe una categoría" required maxlength="40">
+                </div>
+                
+                <div class="info-container">
+                    <label for="animes-amount">Cantidad de animes seleccionados:</label>
+                    <input class="data-input" type="number" name="animes-amount" id="animes-amount" value="0" maxlength="50" readonly>
+                </div>
+            </section>
+                
+            <section class="list-info">
+                <label for="previous-selection">Seleccionados hasta ahora:</label>
+                <ol id="previous-selection">
+    
+                </ol>
+            </section>
+    
+            <div class="create-list-button">
+                <button class="read-more" type="submit">Crear lista</button>
+            </div>
+
+        </form>
+
+        <section class="help-info">
+
+            <div class="info-and-search">
+                <header>
+                    <h3>¿Cómo crear una lista de favoritos?</h3>
+                    <ol>
+                        <li>Selecciona tus animes favoritos</li>
+                        <li>Ingresa un nombre para tu lista</li>
+                        <li>Ingresa una descripción para tu lista (opcional)</li>
+                        <li>Ingresa una categoría o género para tu lista</li>
+                        <li>Presiona el botón "Crear lista"</li>
+                    </ol>
+                </header>
+            </div>
+
+            <div class="info-and-search">
+                <label for="search">Buscar por nombre:</label>
+                <input class="search-input" type="text" id="search" placeholder="Buscar anime...">
+            </div>
+        </section>
+
+    </section>
+
+    <h2 class="title-container">Elige tus animes favoritos</h2>
+
+    <main id="animes-container">
+        {% for anime in animes %}
+            <article>
+                <a href="{% url 'anime_detail' anime.id_anime %}" class="anime_link">
+                    <div class="image-container">
+                        <img src="{{ anime.imagen_url }}" alt="imagen de portada del anime">
+                    </div>
+                    <h3>{{anime.titulo_ingles}}</h3>
+                    <h3>{{anime.titulo_japones}}</h3>
+
+                    <div class="description">
+                        <p class="short-description">{{anime.short_synopsis}}</p>
+                        <p class="full-description hidden">{{anime.synopsis}}</p>
+                    </div>
+                </a>
+                    <button class="read-more">Leer más</button>
+                    <button class="add-to-list" data-anime="{{ anime.titulo_ingles }}">Agregar a la lista</button>
+            </article>
+            
+        {% endfor %}
+    </main>
+    <script>
+        // Selecciona todos los botones "Agregar a la lista"
+        const buttons = document.querySelectorAll('.add-to-list');
+
+        // Crea un conjunto para almacenar los animes seleccionados
+        const selectedAnimes = new Set();
+
+        const animesAmountInput = document.querySelector('#animes-amount');
+
+        // Añade un evento de click a cada botón
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+        // Obtiene el título del anime del atributo data-anime del botón
+                const animeTitle = this.getAttribute('data-anime');
+
+        // Verifica si el anime ya ha sido seleccionado
+        if (selectedAnimes.has(animeTitle)) {
+            // Si el anime ya ha sido seleccionado, lo quita de la lista
+            selectedAnimes.delete(animeTitle);
+
+            // Actualiza el texto y el color del botón
+            this.textContent = 'Agregar a la lista';
+            this.classList.remove('remove-to-list');
+            this.classList.add('add-to-list');
+
+            // Encuentra el elemento li correspondiente y lo elimina
+            const li = document.querySelector(`#previous-selection li[data-anime="${animeTitle}"]`);
+            if (li) {
+                li.remove();
+            }
+
+            // Encuentra el campo oculto correspondiente y lo elimina
+            const hiddenInput = document.querySelector(`input[name="selected-animes"][value="${animeTitle}"]`);
+            if (hiddenInput) {
+                hiddenInput.remove();
+            }
+
+        } else {
+            // Si el anime no ha sido seleccionado y la cantidad de animes seleccionados es menor o igual a 50, lo agrega a la lista
+            if (selectedAnimes.size <= 50) {
+
+                selectedAnimes.add(animeTitle);
+
+                // Crea un nuevo elemento li
+                const li = document.createElement('li');
+                li.textContent = animeTitle;
+                li.setAttribute('data-anime', animeTitle);  // Agrega el atributo data-anime al elemento li
+            
+                // Añade el nuevo elemento li a la lista de animes seleccionados
+                document.querySelector('#previous-selection').appendChild(li);
+
+                // Actualiza el texto y el color del botón
+                this.textContent = 'Quitar';
+                this.classList.add('remove-to-list');
+
+                // Crea un nuevo campo oculto
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'selected-animes';
+                hiddenInput.value = animeTitle;
+
+                // Añade el nuevo campo oculto al formulario
+                document.querySelector('form').appendChild(hiddenInput);
+            } else {
+                alert('No puedes seleccionar más de 50 animes');
+            }
+        }
+        animesAmountInput.value = selectedAnimes.size;
+    });
+});
+// Selecciona el formulario
+const form = document.querySelector('form');
+
+// Añade un evento de submit al formulario
+form.addEventListener('submit', function(event) {
+    // Si no se ha seleccionado ningún anime, evita que se envíe el formulario y muestra un mensaje de error
+    if (selectedAnimes.size === 0) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Error',
+            text: 'Por favor, selecciona al menos un anime',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+});
+    </script>
+
+{% endblock %}
+
+{% block hide_message_js %}
+{% load static %}
+<script src="{% static 'js/hide_message.js' %}"></script>
+{% endblock %}
+{% block js %}
+{% load static %}
+<script src="{% static 'js/base.js' %}"></script>
+<script src="{% static 'js/search.js' %}"></script>
+
+{% endblock %}

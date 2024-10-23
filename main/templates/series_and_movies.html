@@ -1,0 +1,108 @@
+{% extends 'layouts/base.html' %}
+{% block title %}{{type}}{% endblock %}
+
+{% block content %}
+    <section class="filter-options">
+        <form method="GET" action="">
+            <div class="filter-field">
+                <label for="gender">Género</label>
+                <select class="select-options" name="gender" id="gender">
+                    <option value="All" {% if request.GET.gender == "All" %}selected{% endif %}>Todos</option>
+                    <option value="Action" {% if request.GET.gender == "Action" %}selected{% endif %}>Acción</option>
+                    <option value="Award Winning" {% if request.GET.gender == "Award Winning" %}selected{% endif %}>Premiados</option>
+                    <option value="Adventure" {% if request.GET.gender == "Adventure" %}selected{% endif %}>Aventura</option>
+                    <option value="Romance" {% if request.GET.gender == "Romance" %}selected{% endif %} >Romance</option>
+                    <option value="Comedy" {% if request.GET.gender == "Comedy" %}selected{% endif %}>Comedia</option>
+                    <option value="Drama" {% if request.GET.gender == "Drama" %}selected{% endif %}>Drama</option>
+                    <option value="Mystery" {% if request.GET.gender == "Mystery" %}selected{% endif %}>Misterio</option>
+                    <option value="Supernatural" {% if request.GET.gender == "Supernatural" %}selected{% endif %}>Sobrenatural</option>
+                    <option value="Slice of Life" {% if request.GET.gender == "Slice of Life" %}selected{% endif %}>Reflexión de vida</option>
+                    <option value="Suspense" {% if request.GET.gender == "Suspense" %}selected{% endif %}>Suspenso</option>
+                    <option value="Ecchi" {% if request.GET.gender == "Ecchi" %}selected{% endif %}>+18</option>
+                    <option value="Gourmet" {% if request.GET.gender == "Gourmet" %}selected{% endif %}>Cocina</option>
+                    <option value="Avant Garde" {% if request.GET.gender == "Avant Garde" %}selected{% endif %}>Heavy Metal</option>
+                    <option value="Fantasy" {% if request.GET.gender == "Fantasy" %}selected{% endif %}>Fantasía</option>
+                    <option value="Horror" {% if request.GET.gender == "Horror" %}selected{% endif %}>Terror</option>
+                    <option value="Sci-Fi" {% if request.GET.gender == "Sci-Fi" %}selected{% endif %}>Ciencia Ficción</option>
+                    <option value="Sports" {% if request.GET.gender == "Sports" %}selected{% endif %}>Deportes</option>
+                </select>
+            </div>
+        
+            <div class="filter-field">
+                <label for="date">Año</label>
+                <select class="select-options" name="date" id="date">
+                    <option value="All" {% if request.GET.date == "All" %}selected{% endif %}>Todos</option>
+                    <option value="2005" {% if request.GET.date == "2005" %}selected{% endif %}>2005</option>
+                    <option value="2004" {% if request.GET.date == "2004" %}selected{% endif %}>2004</option>
+                    <option value="2003" {% if request.GET.date == "2003" %}selected{% endif %}>2003</option>
+                    <option value="2002" {% if request.GET.date == "2002" %}selected{% endif %}>2002</option>
+                    <option value="2001" {% if request.GET.date == "2001" %}selected{% endif %}>2001</option>
+                    <option value="2000" {% if request.GET.date == "2000" %}selected{% endif %}>2000</option>
+                    <option value="1999" {% if request.GET.date == "1999" %}selected{% endif %}>1999</option>
+                    <option value="1998" {% if request.GET.date == "1998" %}selected{% endif %}>1998</option>
+                    <option value="1997" {% if request.GET.date == "1997" %}selected{% endif %}>1997</option>
+                    <option value="1996" {% if request.GET.date == "1996" %}selected{% endif %}>1996</option>
+                    <option value="1995" {% if request.GET.date == "1995" %}selected{% endif %}>1995</option>
+                    <option value="1993" {% if request.GET.date == "1993" %}selected{% endif %}>1993</option>
+                    <option value="1988" {% if request.GET.date == "1988" %}selected{% endif %}>1988</option>
+                </select>
+            </div>
+        
+            <div class="filter-field">
+                <label for="status">Estado</label>
+                <select class="select-options" name="status" id="status">
+                    <option value="All" {% if request.GET.status == "All" %}selected{% endif %}>Todos</option>
+                    <option value="Finalizado" {% if request.GET.status == "Finalizado" %}selected{% endif %}>Finalizado</option>
+                    <option value="En emisión" {% if request.GET.status == "En emisión" %}selected{% endif %}>En emisión</option>
+                </select>
+            </div>
+
+            <div class="filter-field">
+                <label for="order">Ordenar por</label>
+                <select class="select-options" name="order" id="order">
+                    <option value="All" {% if request.GET.order == "All" %}selected{% endif %}>Predeterminado</option>
+                    <option value="titulo_ingles" {% if request.GET.order == "titulo_ingles" %}selected{% endif %}>Título inglés A-Z</option>
+                    <option value="popularidad" {% if request.GET.order == "popularidad" %}selected{% endif %}>Popularidad</option>
+                    <option value="cantidad_episodios" {% if request.GET.order == "cantidad_episodios" %}selected{% endif %}>Cantidad de episodios (Ascendente)</option>
+                    <option value="-cantidad_episodios" {% if request.GET.order == "-cantidad_episodios" %}selected{% endif %}>Cantidad de episodios (Descendente)</option>
+                    <option value="year_of_release" {% if request.GET.order == "year_of_release" %}selected{% endif %}>Año de estreno</option>
+                    <option value="puntuacion" {% if request.GET.order == "puntuacion" %}selected{% endif %}>Puntuación por parte del público</option>
+                </select>
+            </div>
+
+            <button class="read-more">Filtrar</button>
+
+        </form>
+    </section>
+    {% if animes %}
+        <h2 class="title-container">Nuestra colección para ti</h2>
+
+        <main id="animes-container">
+            {% for anime in animes %}
+                <article>
+                    <a href="{% url 'anime_detail' anime.id_anime %}" class="anime_link">
+                        <div class="image-container">
+                            <img src="{{ anime.imagen_url }}" alt="imagen de portada del anime">
+                        </div>
+                        <h3>{{anime.titulo_ingles}}</h3>
+                        <h3>{{anime.titulo_japones}}</h3>
+            
+                        <div class="description">
+                            <p class="short-description">{{anime.short_synopsis}}</p>
+                            <p class="full-description hidden">{{anime.synopsis}}</p>
+                        </div>
+            
+                    </a>
+                    <button class="read-more">Leer más</button>
+                </article>
+            {% endfor %}
+        </main>
+    {% else %}
+        <p class="title-container">No se encontraron animes con los filtros aplicados.</p>
+    {% endif %}
+
+{% endblock %}
+{% block js %}
+{% load static %}
+<script src="{% static 'js/base.js' %}"></script>
+{% endblock %}

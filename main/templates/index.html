@@ -1,0 +1,21 @@
+
+{% extends 'layouts/base.html' %}
+{% block title %}Animepedia{% endblock %}
+
+{% block content %}
+<section class="welcome-paragraph">
+    <h1>Bienvenido a Animepedia, la wikipedia de los otakus!</h1>
+    <p>Bienvenido a animepedia, tu fuente de informacion sobre tus animes favoritos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit odit id quod earum aspernatur obcaecati repellendus, nisi necessitatibus libero quaerat aliquam debitis nam quia? Ad quo quod praesentium magnam repellendus cum odio ipsam quis ducimus atque voluptatem ipsum eum quasi autem deleniti harum repellat, vero, necessitatibus quae. Nobis praesentium ipsa veniam nam dolor accusamus doloribus. Ducimus officiis molestiae repudiandae. Dolorem ducimus eligendi maiores nulla vel. Illo rem dolor autem repellat.</p>
+    
+</section>
+
+{% if user.is_authenticated %}
+    <section class="welcome-paragraph">
+        <a href="{% url 'animes_by_community:create_anime' %}"><button class="add-to-list">Aportar con un anime</button></a>
+    </section>
+{% endif %}
+
+    
+{% endblock %}
+
+

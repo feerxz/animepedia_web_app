@@ -1,0 +1,43 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Aportes de la comunidad{% endblock %}
+{% load static %}
+{% block bootstrap_css %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+{% endblock %}
+
+{% block content %}
+<h1 class="title-container">Aportes de la comunidad</h1>
+{% if animes %}
+            <main id="animes-container">
+                {% for anime in animes %}
+                    <article>
+                        <a href="{% url 'anime_detail' anime.id_anime %}" class="anime_link">
+                            <div class="image-container">
+                                <img src="{{ anime.imagen_url }}" alt="imagen de portada del anime">
+                            </div>
+                            <h3>{{anime.titulo_ingles}}</h3>
+                            <h3>{{anime.titulo_japones}}</h3>
+                            <p>Aporte hecho por el usuario: <strong>{{anime.create_by.username}}</strong></p>
+                            <p>Fecha de aporte: <strong>{{ anime.fecha_creacion|date:"d F Y" }}</strong></p>
+                            
+                    
+                            <div class="description">
+                                <p class="short-description">{{anime.short_synopsis}}</p>
+                                <p class="full-description hidden">{{anime.synopsis}}</p>
+                            </div>
+                    
+                        </a>
+                        <button class="read-more">Leer más</button>
+                    </article>
+                {% endfor %}
+                
+            </main>
+    {% else %}
+        <p class="title-container">Aún no hay aportes por parte de los usuarios.</p>
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+{% load static %}
+<script src="{% static 'js/base.js' %}"></script>
+{% endblock %}

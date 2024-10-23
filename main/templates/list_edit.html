@@ -1,0 +1,110 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Modificar lista{% endblock %}
+{% load static %}
+{% block bootstrap_css %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+{% endblock %}
+    
+{% block content %}
+<div class="container mt-4">
+    <h5 class="card-title title-container">Editar Lista</h5>
+    <div class="card">
+        
+        <div class="card-body">
+            
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="nombre_lista" class="form-label">Nombre de la lista</label>
+                    <input type="text" name="name" class="form-control" id="nombre_lista" maxlength="40" value="{{ list.nombre_lista }}">
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Descripción</label>
+                    <textarea name="description" class="form-control" id="description" maxlength="500">{{ list.descripcion }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="categoria" class="form-label">Categoría-Género</label>
+                    <input type="text" name="category-gender" class="form-control" id="categoria" maxlength="40" value="{{ list.categoria_genero }}">
+                </div>
+                <div class="mb-3">
+                    <label for="fecha_creacion" class="form-label">Fecha de creación</label>
+                    <input type="text" class="form-control" id="fecha_creacion" value="{{ list.fecha_creacion }}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="fecha_modificacion" class="form-label">Fecha de modificación</label>
+                    <input type="text" class="form-control" id="fecha_modificacion" value="{{ list.fecha_de_modificacion }}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="cantidad_animes" class="form-label">Cantidad de animes seleccionados</label>
+                    <input type="text" class="form-control" name="animes-amount" id="cantidad_animes" maxlength="50" value="{{ list.cantidad_animes }}" readonly>
+                </div>
+                <section>
+                    <label>Seleccionados hasta ahora:</label>
+                    <div class="row">
+                        {% for anime in animes_list %}
+                            <div class="col-2">
+                                <div class="card">
+                                    <div class="card-body car">
+                                        {{ anime.titulo_ingles }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                <br>
+                <button type="button" id="backButton" class="btn btn-secondary" onclick="history.back()">Atrás</button>
+                <button type="button" id="update-animes" class="btn btn-primary">Actualizar animes</button>
+                <button type="button" id="cancelButton" class="btn btn-dark">Cancelar</button>
+                <button type="submit" id="saveButton" class="btn btn-success">Guardar cambios</button>
+            </form>
+        </div>
+    </div>
+    <h5 id="title" class="card-title title-container" style="display: none;">Reelige tus animes</h5>
+    <div class="row mt-4">
+        {% for anime in animes_list %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm hover-shadow-lg">
+                    <img src="{{ anime.imagen_url }}" class="card-img-top" alt="{{ anime.titulo_ingles }}">
+                    <div class="card-body">
+                        <h5 class="card-title anime">{{ anime.titulo_ingles }}</h5>
+                        <h5 class="card-title">{{ anime.titulo_japones }}</h5>
+                        <p class="short-description card-text">{{anime.short_synopsis}}</p>
+                        <p class="full-description hidden card-text">{{anime.synopsis}}</p>
+                        <a href="{% url 'anime_detail' anime.id_anime %}" class="btn btn-info">Ver detalles</a>
+                        <button class="read-more btn btn-primary">Leer más</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row mt-4 d-none">
+        {% for anime in all_animes %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm hover-shadow-lg">
+                    <img src="{{ anime.imagen_url }}" class="card-img-top" alt="{{ anime.titulo_ingles }}">
+                    <div class="card-body">
+                        <h5 class="card-title anime">{{ anime.titulo_ingles }}</h5>
+                        <h5 class="card-title">{{ anime.titulo_japones }}</h5>
+                        <p class="short-description card-text">{{anime.short_synopsis}}</p>
+                        <p class="full-description hidden card-text">{{anime.synopsis}}</p>
+                        <a href="{% url 'anime_detail' anime.id_anime %}" class="btn btn-info">Ver detalles</a>
+                        <button class="read-more btn btn-primary">Leer más</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
+{% block js %}
+{% load static %}
+<script src="{% static 'js/base.js' %}"></script>
+{% endblock %}
+{% block edit_list_js %}
+{% load static %}
+<script src="{% static 'js/edit_list.js' %}"></script>
+{% endblock %}
+

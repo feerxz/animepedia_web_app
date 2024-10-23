@@ -1,0 +1,5 @@
+db.sqlite3
+__pycache__
+db_backup.json
+db.backup.json
+PROJECTS

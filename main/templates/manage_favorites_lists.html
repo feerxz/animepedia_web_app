@@ -1,0 +1,84 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Mis listas{% endblock %}
+{% load static %}
+{% block bootstrap_css %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+{% endblock %}
+
+{% block content %}
+
+    {% if messages %}
+            
+        {% for message in messages %}
+            {% if message.message == 'No tienes listas de favoritos por el momento' %}
+                <script>
+                    Swal.fire({
+                        icon: '{{message.tags}}',
+                        title: '{{message}}',
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
+                </script>
+            {% else %}
+                <script>
+                    Swal.fire({
+                        icon: '{{message.tags}}',
+                        title: '{{message}}',
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
+                </script>
+            {% endif %}
+        {% endfor %}
+
+    {% endif %}
+
+<div class="container mt-4">
+    <h2 class="title-container">Mis listas de favoritos</h2>
+    <div class="row">
+        {% for list in lists %}
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ list.nombre_lista }}</h5>
+                    <p class="card-text">{{ list.descripcion }}</p>
+                    <a href="{% url 'list_detail' list.id_lista %}" class="btn btn-primary">Ver detalles</a>
+                    <a href="{% url 'list_edit' list.id_lista %}" class="btn btn-secondary">Modificar</a>
+                    <form action="" method="POST" class="d-inline" id="delete-form-{{ list.id_lista }}">
+                        {% csrf_token %}
+                        <input type="hidden" name="list_id" value="{{ list.id_lista }}">
+                        <button type="button" class="btn btn-danger delete-button" data-list-id="{{ list.id_lista }}">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script>
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const listId = this.getAttribute('data-list-id');
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.querySelector(`#delete-form-${listId}`).submit();
+                }
+            })
+        });
+    });
+</script>
+
+{% endblock %}
+{% block hide_message_js %}
+{% load static %}
+<script src="{% static 'js/hide_message.js' %}"></script>
+{% endblock %}

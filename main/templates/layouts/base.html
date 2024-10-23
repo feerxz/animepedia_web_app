@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/jpg" href="{% static 'images/icono.jpg' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!--CDN de SweetAlert2 para mostrar mensajes de una forma más atractiva-->
+    
+    {% block extra_css %}{% endblock %}
+    {% block bootstrap_css %}{% endblock %}
+    
+</head>
+<body>
+    <header class="main-header">
+        <h1>Animepedia</h1>
+        <p class="paragraph-description">La wikipedia de los fans del anime</p>  
+    </header>
+    <nav>
+        <ul class="start-nav">
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'home' %}">Inicio</a></li>
+            <li><a href="{% url 'animes' %}">Animes</a></li>
+            <li><a href="{% url 'anime_movies' %}">Películas</a></li>
+            <li><a href="{% url 'anime_series' %}">Series</a></li>
+            <li><a href="{% url 'create_favorites_list' %}">Crear lista de favoritos</a></li>
+            <li><a href="{% url 'animes_by_community:show_animes_by_community' %}">Aportes de los usuarios</a></li>
+
+        </ul>
+        <ul class="end-nav">
+            <li><a href="{% url 'my_account' %}">Mi cuenta</a></li>
+            <li><a href="{% url 'signout' %}">Cerrar Sesión</a></li>
+        </ul>
+        {% else %}
+            <li><a href="{% url 'home' %}">Inicio</a></li>
+            <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
+            <li><a href="{% url 'signup' %}">Registrarse</a></li>
+        {% endif %}
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+    <footer class="references-footer">
+        <div class="info">
+            <a href="#">©Copyright</a>
+            <p>Todos los derechos reservados.</p>
+        </div>
+        <a href="#">About Us</a>
+        <a href="https://docs.api.jikan.moe/" target="_blank"><img src="{% static 'images/jikan_api.jpg' %}" style="width:45px; height:30px" alt="Logo de la api de jikan">Powered by Jikan API</a>
+    </footer>
+
+    {% block js %}{% endblock %}
+    {% block hide_message_js %}{% endblock %}
+    {% block edit_profile_js %}{% endblock %}
+    {% block edit_list_js %}{% endblock %}
+    {% block bootstrap_js %}{% endblock %}
+    
+</body>
+</html>

@@ -1,0 +1,120 @@
+{% extends 'layouts/base.html' %}
+{% load form_filters %}
+{% load static %}
+{% block bootstrap_css %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+{% endblock %}
+{% block content %}
+    <h1 class="title-container">Adicionar Anime</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <form id="animeForm" method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        {% if field.name == "genero" %}
+                        <label for="dropdownMenuButton1" class="col-form-label col-form-label-lg">Elige el/los género/s de la lista de nuestra base de datos:</label>
+                            <div class="dropdown">
+                                <button class="btn btn-lg btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ field.label }}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% for choice in field.field.choices %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="{{ field.name }}" value="{{ choice.0 }}" id="defaultCheck1">
+                                        <label class="form-check-label" for="defaultCheck1">
+                                            {{ genero_choices|get_item:choice.1 }}
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% elif field.name == "productores" %}
+                        <label for="dropdownMenuButton" class="col-form-label col-form-label-lg">Elige el/los productor/es de la lista de nuestra base de datos:</label>
+                            <div class="dropdown">
+                                <button class="btn btn-lg btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ field.label }}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            {% for choice in field.field.choices %}
+                                                <div class="col-2">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="{{ field.name }}" value="{{ choice.0 }}" id="defaultCheck1">
+                                                        <label class="form-check-label" for="defaultCheck1">
+                                                            {{ choice.1 }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <label for="productor-fieldset" class="col-form-label col-form-label-lg">O ingresa uno nuevo:</label>
+                            <fieldset class="p-3 mb-3 mt-3 border rounded" id="productor-fieldset">
+                                <legend class="w-auto">Productor</legend>
+                                {% for field in productor_form %}
+                                    <div class="form-group">
+                                        <label for="{{ field.id_for_label }}" class="col-form-label col-form-label-lg">{{ field.label }}</label>
+                                        {{ field|addcss:'form-control' }}
+                                    </div>
+                                {% endfor %}
+                                <button class="btn btn-primary add-personaje mt-3">Añadir Productor <i class="fas fa-plus"></i></button>
+                            </fieldset>
+
+                        {% else %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" class="col-form-label col-form-label-lg">{{ field.label }}</label>
+                                {{ field|addcss:'form-control' }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <h2>Personajes:</h2>
+                    <fieldset class="p-3 mb-3 mt-3 border rounded">
+                        <legend class="w-auto">Personaje</legend>
+                        {% for field in personaje_form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" class="col-form-label col-form-label-lg">{{ field.label }}</label>
+                                {{ field|addcss:'form-control' }}
+                            </div>
+                        {% endfor %}
+                        <button class="btn btn-primary add-personaje mt-3">Añadir Personaje <i class="fas fa-plus"></i></button>
+                    </fieldset>
+
+                    <h2>Episodios:</h2>
+                    <fieldset class="p-3 mb-3 mt-3 border rounded">
+                        <legend class="w-auto">Episodio</legend>
+                        {% for field in episodio_form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" class="col-form-label col-form-label-lg">{{ field.label }}</label>
+                                {{ field|addcss:'form-control' }}
+                            </div>
+                        {% endfor %}
+                        <button class="btn btn-primary add-personaje mt-3">Añadir Episodio <i class="fas fa-plus"></i></button>
+                    </fieldset>
+                    
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% load static %}
+{% block bootstrap_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/add_personajeform.js' %}"></script>
+{% endblock %}
+
+
+
+
