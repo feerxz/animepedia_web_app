@@ -6,3 +6,5 @@ Animepedia es una plataforma que permite a los usuarios buscar, gestionar y crea
 - Creación de listas de favoritos
 - Aporte de nuevos animes por parte de la comunidad
 - Perfil de usuario y personalización de listas
+## Créditos
+- Gracias a la API Jikan por proporcionar los datos de animes.
